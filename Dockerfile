@@ -6,6 +6,17 @@ WORKDIR /
 
 ### Copy the pom.xml file to the container's working directory.
 COPY pom.xml .
+### New - Copy the mvnw file to the container's working directory.
+COPY mvnw .
+### New line - Copy the mvnw.cmd file to the container's working directory.
+COPY mvnw.cmd .
+
+### New line - Copy the package.json file to the container's working directory
+COPY package.json .
+### New line - Copy the webpack.config.js file to the container's working directory
+COPY webpack.config.js .
+### New line - Copy the package-lock.json file to the container's working directory
+COPY package-lock.json .
 
 ### Install the dependencies required for the React frontend
 RUN apt-get update && \
@@ -21,8 +32,8 @@ RUN npm run build
 ### Copy the backend files to the container's working directory
 COPY src/main/java/ .
 
-### Build the Spring Boot backend
-RUN mvn package
+### Updated line - Build the Spring Boot backend
+RUN mvnw -f /pom.xml clean package
 
 ### Set the entrypoint for the Docker container
 ENTRYPOINT ["java", "-jar", "target/react-and-spring-data-rest-0.0.1-SNAPSHOT.jar"]
