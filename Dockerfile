@@ -27,7 +27,8 @@ RUN apt-get update && \
 COPY src/main/ ./
 
 ### Build the React frontend
-RUN npm run build
+### RUN npm run build
+RUN webpack --mode production
 
 ### Copy the backend files to the container's working directory
 ### COPY src/main/java/ ./
