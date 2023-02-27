@@ -13,6 +13,11 @@ variables:
   dockerRegistryServiceConnection: 'sbr-service'
   imageRepository: 'wahabajascosbrdeployment'
   containerRegistry: 'sbrcr.azurecr.io'
+  # ---
+  dockerRegistryEndpoint: 'https://sbrcr.azurecr.io'
+  dockerRegistryUsername: 'sbrcr'
+  dockerRegistryPassword: 'ExJdMO5WcLNWzPX+hijMH8cZE6vpC1PcmaltHR62pq+ACRCG/cNg'
+  # ---
   dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
   tag: '$(Build.BuildId)'
 
