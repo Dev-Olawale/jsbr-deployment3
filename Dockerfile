@@ -33,6 +33,8 @@ COPY pom.xml mvnw mvnw.cmd /home/app/
 ### COPY src/main/java/ ./
 
 ### Updated line - Build the Spring Boot backend
+RUN mvn -N io.takari:maven:wrapper
+RUN chmod +x mvnw
 RUN mvnw -f ./pom.xml clean package
 
 # Package stage
