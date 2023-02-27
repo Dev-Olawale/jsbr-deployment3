@@ -38,7 +38,7 @@ RUN mvnw -f ./pom.xml clean package
 # Package stage
 FROM openjdk:8-jdk-alpine
 WORKDIR /app
-COPY --from=spring-build /home/app/target/react-and-spring-data-rest-0.0.1-SNAPSHOT.jar
+COPY --from=spring-build /home/app/target/react-and-spring-data-rest-0.0.1-SNAPSHOT.jar .
 ### Set the entrypoint for the Docker container
 ENTRYPOINT ["java", "-jar", "target/react-and-spring-data-rest-0.0.1-SNAPSHOT.jar"]
 ### Expose the port on which the Spring Boot application will listen for requests
