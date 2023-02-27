@@ -32,7 +32,7 @@ stages:
       displayName: 'Maven pom.xml'
       inputs:
         goals: 'clean package -DskipTests=false'
-        testRunTitle: 'Testing the application code base.'
+        testRunTitle: 'Testing the application code base'
     - task: Docker@2
       displayName: Build and push an image to container registry
       inputs:
