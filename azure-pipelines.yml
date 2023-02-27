@@ -10,7 +10,7 @@ resources:
 
 variables:
   # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: '8cf03ed4-f18d-4b5f-a9c9-f410269fbf73'
+  dockerRegistryServiceConnection: 'sbr-service'
   imageRepository: 'wahabajascosbrdeployment'
   containerRegistry: 'sbrcr.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
