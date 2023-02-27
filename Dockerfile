@@ -20,9 +20,7 @@ COPY pom.xml /home/app
 ### COPY package-lock.json ./
 
 ### Install the dependencies required for the React frontend
-### RUN apt-get update && \
-    apt-get install -y npm && \
-    npm install
+### RUN apt-get update && apt-get install -y npm && npm install
 
 ### Copy the rest of the frontend files to the container's working directory
 ### COPY src/main/ ./
