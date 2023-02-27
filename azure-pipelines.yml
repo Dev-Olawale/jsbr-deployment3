@@ -15,7 +15,7 @@ variables:
   containerRegistry: 'sbrcr.azurecr.io'
   # ---
   dockerRegistryEndpoint: 'https://sbrcr.azurecr.io'
-  dockerRegistryUsername: 'sbrcr'
+  dockerRegistryUsername: 'sbr-service'
   #dockerRegistryPassword: 'ExJdMO5WcLNWzPX+hijMH8cZE6vpC1PcmaltHR62pq+ACRCG/cNg'
   dockerRegistryPassword: QE6DTnbEWJlw08Oyiq/sqISy2bHjo0dUld0XaKKn81+ACRAqdhgB
   # ---
