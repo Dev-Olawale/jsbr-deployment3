@@ -6,7 +6,7 @@ FROM openjdk:11-jdk-slim-buster AS spring-build
 
 ### Copy the pom.xml file to the container's working directory.
 COPY src /home/app/src
-COPY pom.xml mvnw mvnw.cmd /home/app
+COPY pom.xml mvnw mvnw.cmd /home/app/
 ### New - Copy the mvnw file to the container's working directory.
 ### COPY mvnw ./
 ### New line - Copy the mvnw.cmd file to the container's working directory.
