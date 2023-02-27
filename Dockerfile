@@ -24,13 +24,13 @@ RUN apt-get update && \
     npm install
 
 ### Copy the rest of the frontend files to the container's working directory
-COPY src/main/js/ .
+COPY src/main/* .
 
 ### Build the React frontend
 RUN npm run build
 
 ### Copy the backend files to the container's working directory
-COPY src/main/java/ .
+### COPY src/main/java/ .
 
 ### Updated line - Build the Spring Boot backend
 RUN mvnw -f /pom.xml clean package
