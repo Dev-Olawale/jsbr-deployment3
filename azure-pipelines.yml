@@ -9,19 +9,15 @@ resources:
 - repo: self
 
 variables:
+- group: jsbr_variable_group
   # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: '66161d9c-9da3-48ef-9793-fdbb23186b3d'
-  imageRepository: 'sbrdeployment'
-  containerRegistry: 'sbrcr.azurecr.io'
-  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
-  tag: '$(Build.BuildId)'
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
 
 stages:
 - stage: Build
-  displayName: Test, Build and push stage
+  displayName: Build and push stage
   jobs:
   - job: Build
     displayName: Build
@@ -42,3 +38,15 @@ stages:
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
+    - task: AzureRmWebAppDeployment@4
+      inputs:
+        ConnectionType: 'AzureRM'
+        azureSubscription: '$(azureSubscription)'
+        appType: 'webAppContainer'
+        WebAppName: 'jsbr-deployment-webApp'
+        DockerNamespace: '$(DockerNamespace)'
+        DockerRepository: 'wahabajasco/jsbr-deployment'
+        DockerImageTag: '$(Build.BuildId)'
+        StartupCommand: 'java -jar react-and-spring-data-rest-0.0.1-SNAPSHOT.jar'
+        AppSettings: '-Port 8080'
+        ConfigurationSettings: 'openjdk:11-jdk-slim-buster'
