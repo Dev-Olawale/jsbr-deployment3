@@ -1,0 +1,54 @@
+name: Build and Deploy Docker Container
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  DOCKER_REGISTRY: sbrcr.azurecr.io
+  IMAGE_REPOSITORY: jsbr-deployment
+  DOCKERFILE_PATH: ./Dockerfile
+  AZURE_SUBSCRIPTION: MSDN Platforms Subscription (6ffc48ff-0b71-46b5-a11d-3ab0c912c458)
+  DOCKER_NAMESPACE: sbrcr.azurecr.io
+  TAG: ${{ github.run_number }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Maven
+        uses: nanovms/ops@main
+        with:
+          args: "clean package -DskipTests=false"
+        env:
+          MAVEN_OPTS: "-Xmx1024m"
+
+      - name: Login to Azure Container Registry
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ env.DOCKER_REGISTRY }}
+          username: ${{ secrets.AZURE_REGISTRY_USERNAME }}
+          password: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: ${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_REPOSITORY }}:${{ env.TAG }}
+          dockerfile: ${{ env.DOCKERFILE_PATH }}
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-container-deploy@v2
+        with:
+          app-name: jsbr-deployment-webApp
+          images: ${{ env.DOCKER_NAMESPACE }}/${{ env.IMAGE_REPOSITORY }}:${{ env.TAG }}
+          resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
+          login-server: ${{ env.DOCKER_REGISTRY }}
+          username: ${{ secrets.AZURE_REGISTRY_USERNAME }}
+          password: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
+          slot-name: ${{ env.SLOT_NAME }}
