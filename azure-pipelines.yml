@@ -10,12 +10,12 @@ resources:
 
 variables:
   # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: '66161d9c-9da3-48ef-9793-fdbb23186b3d'
+  dockerRegistryServiceConnection: 'sbrcr'
   imageRepository: 'jsbr-deployment'
   containerRegistry: 'sbrcr.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
   tag: '$(Build.BuildId)'
-  azureSubscription: 'MSDN Platforms Subscription (6ffc48ff-0b71-46b5-a11d-3ab0c912c458)'
+  azureSubscription: 'jsbr2AzureSub'
   DockerNamespace: 'sbrcr.azurecr.io'
 
   # Agent VM image name
