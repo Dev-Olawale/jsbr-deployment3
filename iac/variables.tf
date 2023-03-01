@@ -28,3 +28,8 @@ variable "insight_name" {
   description = "The Azure monitor insight"
   default = "jsbr-insight"
 }
+
+varioable "lwapp_name" {
+  description = "The Azure linux webApp wher the java react app deployment docker image is deployed"
+  default = "jsbr-deployment-webApp"
+}
