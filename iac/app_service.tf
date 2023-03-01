@@ -32,7 +32,7 @@ resource "azurerm_container_registry_webhook" "webhooks" {
   registry_name       = var.acr_name
   service_uri         = "https://${azurerm_linux_web_app.lwapp.name}.azurewebsites.net/docker/hook"
   actions             = ["push"]
-  scope               = "azurerm_container_registry.acr.name:$(tag)"
+  scope               = "azurerm_container_registry.acr.name:latest"
   status              = "enabled"
   custom_headers = {
     "X-Custom-Header" = "CustomValue"
