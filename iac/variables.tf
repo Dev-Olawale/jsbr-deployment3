@@ -31,5 +31,5 @@ variable "insight_name" {
 
 variable "lwapp_name" {
   description = "The Azure linux webApp wher the java react app deployment docker image is deployed"
-  default = "jsbr-deployment-webApp"
+  default = "jsbr-deployment-webApp-linux"
 }
