@@ -1,5 +1,6 @@
 # Define variables for resource names and locations
 variable "resource_group_name" {
+  description = "The resource group for the java react app deployment"
   default = "jsbr-RG"
 }
 
