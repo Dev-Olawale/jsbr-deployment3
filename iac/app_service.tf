@@ -1,6 +1,6 @@
 # Create App Service Plan
 resource "azurerm_service_plan" "asp" {
-  name                = var.azurerm_service_plan_name
+  name                = var.asp_name
   location            = var.location
   resource_group_name = var.resource_group_name
   sku_name            = "S1"
