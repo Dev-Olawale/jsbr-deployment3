@@ -1,10 +1,12 @@
 # Create App Service Plan
 resource "azurerm_service_plan" "asp" {
-  name                = "jsbr-deployment-appServiceplan"
+  name                = var.azurerm_service_plan_name
   location            = var.location
   resource_group_name = var.resource_group_name
   sku_name            = "S1"
   os_type             = "Linux"
+    
+  depends_on = [azurerm_container_registry.acr]
 }
 
 # Create App Service for Linux Container
