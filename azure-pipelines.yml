@@ -11,7 +11,7 @@ resources:
 variables:
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: 'MSDN Platforms Subscription (6ffc48ff-0b71-46b5-a11d-3ab0c912c458)'
-  imageRepository: 'jsbr-deployment'
+  imageRepository: 'jsbr-imageRepository'
   containerRegistry: 'jsbrcr.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
   tag: '$(Build.BuildId)'
@@ -87,7 +87,7 @@ stages:
           command: buildAndPush
           repository: $(imageRepository)
           dockerfile: $(dockerfilePath)
-          containerRegistry: $(dockerRegistryServiceConnection)
+          containerRegistry: $(containerRegistry)
           tags: |
             $(tag)
           dependsOn: Clean_package
@@ -97,7 +97,7 @@ stages:
           ConnectionType: 'AzureRM'
           azureSubscription: '$(azureSubscription)'
           appType: 'webAppContainer'
-          WebAppName: 'jsbr-deployment-webApp'
+          WebAppName: 'jsbr-deployment-webApp-linux'
           DockerNamespace: '$(DockerNamespace)'
-          DockerRepository: 'jsbr-deployment'
+          DockerRepository: 'jsbr-imageRepository'
           DockerImageTag: '$(tag)'
