@@ -15,11 +15,11 @@ resource "azurerm_linux_web_app" "lwapp" {
   location                   = var.location
   resource_group_name        = var.resource_group_name
   service_plan_id            = azurerm_service_plan.asp.id
-  https_only                 = true
-  client_certificate_enabled = true
+  #https_only                 = true
+  #client_certificate_enabled = true
 
   site_config {
-    always_on        = true
+    #always_on        = true
     #linux_fx_version = "DOCKER|${azurerm_container_registry.acr.login_server}/<docker-image-name>:$(tag)"
   }
 }
