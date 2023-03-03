@@ -1,7 +1,3 @@
-# Docker
-# Build and push an image to Azure Container Registry
-# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
-
 trigger:
 - master
 
@@ -9,21 +5,7 @@ resources:
 - repo: self
 
 variables:
-  # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: 'MSDN Platforms Subscription (6ffc48ff-0b71-46b5-a11d-3ab0c912c458)'
-  imageRepository: 'jsbr-imageRepository'
-  containerRegistry: 'jsbrcr.azurecr.io'
-  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
-  tag: '$(Build.BuildId)'
-  # Terraform service connection azureSubscription: 'jsbr2AzureSub'
-  DockerNamespace: 'jsbrcr.azurecr.io'
-  azureSubscription: 'MSDN Platforms Subscription (6ffc48ff-0b71-46b5-a11d-3ab0c912c458)'
-  # resourceGroupName: 'terraform-RG'
-  # storageAccountName: 'jsbrstorageaccounts'
-  # containerName: 'jsbrcontainer'
-  # terraformKey: 'jsbrterraform.tfstate'
-  # containerRegistryName: 'jsbrcr'
-  # webAppName: 'jsbr-deployment-webApp'
+  - group: azVariabes
 
 stages:
 - stage: Deploy_Infrastructure
@@ -31,40 +13,40 @@ stages:
   - job: Init
     displayName: 'Terraform: init'
     pool:
-      name: Azure Pipelines
+      vmImage: 'ubuntu-latest'
       steps:
       - task: charleszipp.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-cli.TerraformCLI@0
         displayName: 'Terraform: init'
         inputs:
           command: init
           workingDirectory: iac
-          backendType: 'azurerm'
-          backendServiceArm: 'MSDN Platforms Subscription (6ffc48ff-0b71-46b5-a11d-3ab0c912c458)'
-          backendAzureRmSubscriptionId: '6ffc48ff-0b71-46b5-a11d-3ab0c912c458'
-          backendAzureRmResourceGroupName: 'terraform-RG'
-          backendAzureRmStorageAccountName: jsbrstorageaccounts
-          backendAzureRmContainerName: jsbrcontainer
+          backendType: azurerm
+          backendServiceArm: '$(AZURE_SUB)'
+          backendAzureRmSubscriptionId: '$(AZURE_SUB_ID)'
+          backendAzureRmResourceGroupName: '$(AZURE_SA_RG)'
+          backendAzureRmStorageAccountName: '$(AZURE_SA_NAME)'
+          backendAzureRmContainerName: '$(AZURE_SA_CONTAINER_NAME)'
           backendAzureRmKey: jsbrterraform.tfstate
       - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV4@4
         displayName: 'Terraform: plan'
         inputs:
           command: plan
           workingDirectory: iac
-          environmentServiceNameAzureRM: 'MSDN Platforms Subscription (6ffc48ff-0b71-46b5-a11d-3ab0c912c458)'
+          environmentServiceNameAzureRM: '$(AZURE_SUB)'
       - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV4@4
-        displayName: 'Terraform: Apply'
+        displayName: 'Terraform: apply'
         inputs:
           command: apply
           workingDirectory: iac
-          environmentServiceNameAzureRM: 'MSDN Platforms Subscription (6ffc48ff-0b71-46b5-a11d-3ab0c912c458)'
-          backendServiceArm: 'MSDN Platforms Subscription (6ffc48ff-0b71-46b5-a11d-3ab0c912c458)'
+          environmentServiceNameAzureRM: '$(AZURE_SUB)'
 
 - stage : Test_and_clean_package
   jobs:    
   - job: Clean_package
     displayName: Maven
+    #dependsOn: Apply
     pool:
-      name: Azure Pipelines
+      vmImage: 'ubuntu-latest'
       demands: maven
       steps:
       - task: Maven@4
@@ -78,26 +60,26 @@ stages:
   jobs:
   - job: Build
     displayName: 'Build, push and deploy apply'
+    #dependsOn: Clean_package
     pool:
       vmImage: 'ubuntu-latest'
       steps:
-      - task: Docker@2
-        displayName: Build and push an docker image to container registry
+      - task: Docker@0
+        displayName: 'Build an image'
         inputs:
-          command: buildAndPush
-          repository: $(imageRepository)
-          dockerfile: $(dockerfilePath)
-          containerRegistry: $(containerRegistry)
-          tags: |
-            $(tag)
+          azureSubscription: '$(AZURE_SUB)'
+          azureContainerRegistry: '$(ACR_LOGIN_SERVER)'
           dependsOn: Clean_package
-      - task: AzureRmWebAppDeployment@4
-        displayName: Deploy the docker image to App service
+      - task: Docker@0
+        displayName: 'Push an image'
         inputs:
-          ConnectionType: 'AzureRM'
-          azureSubscription: '$(azureSubscription)'
-          appType: 'webAppContainer'
-          WebAppName: 'jsbr-deployment-webApp-linux'
-          DockerNamespace: '$(DockerNamespace)'
-          DockerRepository: 'jsbr-imageRepository'
-          DockerImageTag: '$(tag)'
+          azureSubscription: '$(AZURE_SUB)'
+          azureContainerRegistry: '$(ACR_LOGIN_SERVER)'
+          action: 'Push an image'
+      - task: AzureWebAppContainer@1
+        displayName: 'Azure Web App on Container Deploy'
+        inputs:
+          azureSubscription: '$(AZURE_SUB)'
+          appName: '$(WEB_APP_NAME)'
+          containers: '$(Build.Repository.Name):$(Build.BuildId)'
+
