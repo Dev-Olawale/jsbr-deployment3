@@ -21,10 +21,14 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
       
-    - name: Login to Azure      
-    - uses: Azure/login@v1
+    - name: Login to Azure using PowerShell
+      uses: azure/login-powershell@v1
       with:
         creds: '{"clientId":"${{ secrets.APP_ID }}","clientSecret":"${{ secrets.CLIENT_SECRET }}","subscriptionId":"${{ secrets.AZURE_SUBSCRIPTION }}","tenantId":"${{ secrets.TENANT_ID }}"}'
+        
+    - name: Select Azure subscription
+      run: |
+        Set-AzContext -SubscriptionId ${{ secrets.AZURE_SUBSCRIPTION }}        
           
     
     # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
