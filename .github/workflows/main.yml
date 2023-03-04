@@ -11,6 +11,7 @@ env:
   DOCKERFILE_PATH: ./Dockerfile
   DOCKER_NAMESPACE: newNameSpace
   WEB_APP_NAME: jsbrwebapp
+  APP_RESOURCE_GROUP: java-react-RG
   TAG: ${{ github.run_number }}
 
 jobs:
@@ -50,15 +51,11 @@ jobs:
       #uses: azure/login@v1
       uses: Azure/cli@v1.0.7
       with:
-        creds: ${{ secrets.SERVICE_CREDENTIALS }}
+        inlineScript: | 
+          az login --service-principal --username ${{ secrets.APP_ID}} --password ${{ secrets.CLIENT_SECRET}} --tenant ${{ secrets.TENANT_ID}} \
+          az webapp config container set -g ${{ env.APP_RESOURCE_GROUP}} -n ${{ env.WEB_APP_NAME}}
+            --docker-custom-image-name "${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_REPOSITORY }}:${{ env.TAG }}" \
+            --docker-registry-server-url ${{ env.DOCKER_REGISTRY }}\
+            --docker-registry-server-user ${{ secrets.AZURE_REGISTRY_USERNAME }})\
+            --docker-registry-server-password ${{ secrets.AZURE_REGISTRY_PASSWORD }}
 
-    - name: Deploy to Azure Web App
-      #uses: Azure/cli@v1.0.7
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: ${{ env.WEB_APP_NAME }}
-        images: ${{ env.DOCKER_NAMESPACE }}/${{ env.IMAGE_REPOSITORY }}:${{ env.TAG }}
-        resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
-        #login-server: ${{ env.DOCKER_REGISTRY }}
-        #username: ${{ secrets.AZURE_REGISTRY_USERNAME }}
-        #password: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
