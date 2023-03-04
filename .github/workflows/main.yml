@@ -46,6 +46,11 @@ jobs:
         context: .
         dockerfile: ${{ env.DOCKERFILE_PATH }}
 
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.SERVICE_CREDENTIALS }}
+
     - name: Deploy to Azure Web App
       #uses: azure/webapps-container-deploy@v1
       uses: azure/webapps-deploy@v2
@@ -53,6 +58,6 @@ jobs:
         app-name: ${{ env.WEB_APP_NAME }}
         images: ${{ env.DOCKER_NAMESPACE }}/${{ env.IMAGE_REPOSITORY }}:${{ env.TAG }}
         resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
-        login-server: ${{ env.DOCKER_REGISTRY }}
-        username: ${{ secrets.AZURE_REGISTRY_USERNAME }}
-        password: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
+        #login-server: ${{ env.DOCKER_REGISTRY }}
+        #username: ${{ secrets.AZURE_REGISTRY_USERNAME }}
+        #password: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
