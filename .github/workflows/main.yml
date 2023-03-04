@@ -25,9 +25,9 @@ jobs:
     - name: Azure Login and Deploy
       uses: Azure/cli@v1.0.7
       with:
-        scriptType: bash
+        #scriptType: bash
         inlineScript: | 
-          az login --service-principal --username ${{ secrets.APP_ID }} --password ${{ secrets.CLIENT_SECRET }} --tenant ${{ secrets.TENANT_ID }}
+          az login --service-principal -u ${{ secrets.APP_ID }} -p ${{ secrets.CLIENT_SECRET }} --tenant ${{ secrets.TENANT_ID }}
           
     
     # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
@@ -77,7 +77,7 @@ jobs:
       with:
         scriptType: bash
         inlineScript: | 
-          az login --service-principal --username ${{ secrets.APP_ID }} --password ${{ secrets.CLIENT_SECRET }} --tenant ${{ secrets.TENANT_ID }}
+          az login --service-principal -u ${{ secrets.APP_ID }} -p ${{ secrets.CLIENT_SECRET }} --tenant ${{ secrets.TENANT_ID }}
           az webapp config container set -g ${{ env.APP_RESOURCE_GROUP }} --plan ${{ secrets.APP_SERVICE_PLAN }} -n ${{ env.WEB_APP_NAME }}\
             --docker-custom-image-name "${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_REPOSITORY }}:${{ env.TAG }}" \
             --docker-registry-server-url ${{ env.DOCKER_REGISTRY }}\
