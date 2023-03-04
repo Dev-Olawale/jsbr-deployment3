@@ -16,12 +16,7 @@ variable "acr_name" {
 
 variable "asp_name" {
   description = "The app service plan for the java react app deployment webApp"
-  default = "jsbr-deployment-appServiceplan"
-}
-
-variable "webhooks_name" {
-  description = "The Webhook for the container registry created for the java react app deployment"
-  default = "jsbrdeploymentwebAppHook"
+  default = "jsbrappserviceplan"
 }
 
 variable "insight_name" {
@@ -29,7 +24,7 @@ variable "insight_name" {
   default = "jsbr-insight"
 }
 
-variable "lwapp_name" {
+variable "web_app_name" {
   description = "The Azure linux webApp wher the java react app deployment docker image is deployed"
-  default = "jsbr-deployment-webApp-linux"
+  default = "jsbrwebapp"
 }
