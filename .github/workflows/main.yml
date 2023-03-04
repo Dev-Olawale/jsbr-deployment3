@@ -47,12 +47,13 @@ jobs:
         dockerfile: ${{ env.DOCKERFILE_PATH }}
 
     - name: Azure Login
-      uses: azure/login@v1
+      #uses: azure/login@v1
+      uses: Azure/cli@v1.0.7
       with:
         creds: ${{ secrets.SERVICE_CREDENTIALS }}
 
     - name: Deploy to Azure Web App
-      #uses: azure/webapps-container-deploy@v1
+      #uses: Azure/cli@v1.0.7
       uses: azure/webapps-deploy@v2
       with:
         app-name: ${{ env.WEB_APP_NAME }}
