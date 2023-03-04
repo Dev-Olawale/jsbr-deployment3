@@ -9,7 +9,6 @@ env:
   DOCKER_REGISTRY: sbrcr.azurecr.io
   IMAGE_REPOSITORY: jsbrimagerepo
   DOCKERFILE_PATH: ./Dockerfile
-  DOCKER_NAMESPACE: newNameSpace
   WEB_APP_NAME: jsbrwebapp
   APP_RESOURCE_GROUP: java-react-RG
   TAG: ${{ github.run_number }}
@@ -27,8 +26,7 @@ jobs:
       with:
         #scriptType: bash
         inlineScript: | 
-          az login --service-principal -u ${{ secrets.APP_ID }} -p ${{ secrets.CLIENT_SECRET }} --tenant ${{ secrets.TENANT_ID }}
-          az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION }}
+          az login --service-principal -u ${{ secrets.AZURE_USER }} -p ${{ secrets.AZURE_PASS }}
           
     
     # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
