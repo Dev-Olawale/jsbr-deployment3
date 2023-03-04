@@ -8,6 +8,10 @@ terraform {
   }
   
   backend "azurerm" {
+    resource_group_name  = "terraform-RG"
+    storage_account_name = "jsbrtorageaccounts"
+    container_name       = "jsbrcontainer"
+    key                  = "jsbrterraform.tfstate"
   }
 
   required_version = ">= 1.1.0"
