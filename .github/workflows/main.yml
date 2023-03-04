@@ -10,6 +10,7 @@ env:
   IMAGE_REPOSITORY: jsbrimagerepo
   DOCKERFILE_PATH: ./Dockerfile
   DOCKER_NAMESPACE: newNameSpace
+  WEB_APP_NAME: jsbrwebapp
   TAG: ${{ github.run_number }}
 
 jobs:
