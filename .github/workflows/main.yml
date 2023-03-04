@@ -26,7 +26,7 @@ jobs:
       with:
         #scriptType: bash
         inlineScript: | 
-          az login --service-principal -u ${{ secrets.AZURE_USER }} -p ${{ secrets.AZURE_PASS }}
+          az login -u ${{ secrets.AZURE_USER }} -p ${{ secrets.AZURE_PASS }}
           
     
     # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
