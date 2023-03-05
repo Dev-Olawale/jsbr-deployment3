@@ -25,7 +25,7 @@ jobs:
       uses: Azure/cli@v1.0.7
       with:
         inlineScript: | 
-          az login --username ${{ secrets.AZURE_USER }} --password ${{ secrets.AZURE_PASS }}    
+          az login --service-principal -u ${{ secrets.APP_ID }} -p ${{ secrets.CLIENT_SECRET }} --tenant ${{ secrets.TENANT_ID }}    
           
     
     # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
