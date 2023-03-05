@@ -4,82 +4,38 @@ trigger:
 resources:
 - repo: self
 
-variables:
-  - group: azVariabes
+pool:
+  vmImage: 'ubuntu-latest'
 
 stages:
-- stage: Deploy_Infrastructure
-  jobs:
-  - job: Init
-    displayName: 'Terraform: init'
-    pool:
-      vmImage: 'ubuntu-latest'
-      steps:
-      - task: charleszipp.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-cli.TerraformCLI@0
-        displayName: 'Terraform: init'
-        inputs:
-          command: init
-          workingDirectory: iac
-          backendType: azurerm
-          backendServiceArm: '$(AZURE_SUB)'
-          backendAzureRmSubscriptionId: '$(AZURE_SUB_ID)'
-          backendAzureRmResourceGroupName: '$(AZURE_SA_RG)'
-          backendAzureRmStorageAccountName: '$(AZURE_SA_NAME)'
-          backendAzureRmContainerName: '$(AZURE_SA_CONTAINER_NAME)'
-          backendAzureRmKey: jsbrterraform.tfstate
-      - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV4@4
-        displayName: 'Terraform: plan'
-        inputs:
-          command: plan
-          workingDirectory: iac
-          environmentServiceNameAzureRM: '$(AZURE_SUB)'
-      - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV4@4
-        displayName: 'Terraform: apply'
-        inputs:
-          command: apply
-          workingDirectory: iac
-          environmentServiceNameAzureRM: '$(AZURE_SUB)'
-
-- stage : Test_and_clean_package
-  jobs:    
-  - job: Clean_package
-    displayName: Maven
-    #dependsOn: Apply
-    pool:
-      vmImage: 'ubuntu-latest'
-      demands: maven
-      steps:
-      - task: Maven@4
-        displayName: 'Maven pom.xml'
-        inputs:
-            goals: 'clean package -DskipTests=false'
-            testRunTitle: 'Testing the application code base'
-            dependsOn: Apply
-
 - stage : Build_Push_and_Deploy_application
   jobs:
   - job: Build
-    displayName: 'Build, push and deploy apply'
-    #dependsOn: Clean_package
-    pool:
-      vmImage: 'ubuntu-latest'
-      steps:
-      - task: Docker@0
-        displayName: 'Build an image'
+    displayName: 'Build, push and deploy'
+    steps:
+      - task: Maven@4
+        displayName: 'Maven Test and Clean Package'
         inputs:
-          azureSubscription: '$(AZURE_SUB)'
-          azureContainerRegistry: '$(ACR_LOGIN_SERVER)'
-          dependsOn: Clean_package
-      - task: Docker@0
-        displayName: 'Push an image'
-        inputs:
-          azureSubscription: '$(AZURE_SUB)'
-          azureContainerRegistry: '$(ACR_LOGIN_SERVER)'
-          action: 'Push an image'
-      - task: AzureWebAppContainer@1
-        displayName: 'Azure Web App on Container Deploy'
-        inputs:
-          azureSubscription: '$(AZURE_SUB)'
-          appName: '$(WEB_APP_NAME)'
-          containers: '$(Build.Repository.Name):$(Build.BuildId)'
+            goals: 'clean package -DskipTests=false'
 
+      - task: Docker@2
+        displayName: 'Docker Build and Push'
+        inputs:
+          containerRegistry: 'jsbrcontainerregistry'
+          repository: 'jsbrimagerepo'
+          command: 'buildAndPush'
+          Dockerfile: '**/Dockerfile'
+
+      - task: AzureCLI@2
+        displayName: 'Docker Image Deploy'
+        inputs:
+          azureSubscription: 'jsbrServiceConnection'
+          scriptType: 'bash'
+          scriptLocation: 'inlineScript'
+          inlineScript: |
+            az webapp config container set --name $(webAppName)\
+              --resource-group $(resourceGroupName)\
+              --docker-registry-server-url $(registryURL)\
+              --docker-registry-server-user $(registryUser)\
+              --docker-registry-server-password $(registryPass)\
+              --docker-custom-image-name $(imageName)
