@@ -12,6 +12,11 @@ env:
   WEB_APP_NAME: jsbrwebapp
   APP_RESOURCE_GROUP: java-react-RG
   TAG: ${{ github.run_number }}
+  # For Terraform
+  client_id: ${{ secrets.APP_ID }}
+  client_secret: ${{ secrets.CLIENT_SECRET }}
+  tenant_id: ${{ secrets.TENANT_ID }}
+  subscription_id: ${{ secrets.AZURE_SUBSCRIPTION }}
 
 jobs:
   build-and-deploy:
