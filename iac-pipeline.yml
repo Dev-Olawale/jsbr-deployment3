@@ -1,0 +1,47 @@
+trigger: none
+
+resources:
+- repo: self
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+
+stages:
+- stage: TerraformDeployment
+  displayName: 'Deploy resources using Terraform'
+  jobs:
+  - job: Terraform_IaC
+    displayName: 'Deploy Infrastructures as Code'
+    steps:
+      - task: TerraformCLI@0
+        displayName: Terraform Init
+        inputs:
+          command: 'init'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/iac'
+          backendType: 'azurerm'
+          backendServiceArm: 'jsbrServiceConnection'
+          backendAzureRmSubscriptionId: '$(azureSubID)'
+          backendAzureRmResourceGroupName: 'terraform-RG'
+          backendAzureRmStorageAccountName: 'jsbrtorageaccounts'
+          backendAzureRmContainerName: 'jsbrcontainer'
+          backendAzureRmKey: 'jsbrterraform.tfstate'
+          allowTelemetryCollection: true
+          
+      - task: TerraformCLI@0
+        displayName: Terraform Plan
+        inputs:
+          command: 'plan'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/iac'
+          environmentServiceName: 'jsbrServiceConnection'
+          providerAzureRmSubscriptionId: '$(azureSubID)'
+          allowTelemetryCollection: true
+
+      - task: TerraformCLI@0
+        displayName: Terraform Apply
+        inputs:
+          command: 'apply'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/iac'
+          environmentServiceName: 'jsbrServiceConnection'
+          providerAzureRmSubscriptionId: '$(azureSubID)'
+          allowTelemetryCollection: true
