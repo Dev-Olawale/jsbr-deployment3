@@ -11,7 +11,7 @@ resource "azurerm_service_plan" "asp" {
 
 # Create App Service for Linux Container
 resource "azurerm_linux_web_app" "lwapp" {
-  name                       = var.web_app_name
+  name                       = var.lwapp_name
   location                   = var.location
   resource_group_name        = var.resource_group_name
   service_plan_id            = azurerm_service_plan.asp.id
