@@ -86,7 +86,7 @@ jobs:
           az webapp config container set -g ${{ env.APP_RESOURCE_GROUP }} --plan ${{ secrets.APP_SERVICE_PLAN }} -n ${{ env.WEB_APP_NAME }}\
             --docker-custom-image-name "${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_REPOSITORY }}:${{ env.TAG }}" \
             --docker-registry-server-url ${{ env.DOCKER_REGISTRY }}\
-            --docker-registry-server-user ${{ secrets.AZURE_REGISTRY_USERNAME }})\
+            --docker-registry-server-user ${{ secrets.AZURE_REGISTRY_USERNAME }}\
             --docker-registry-server-password ${{ secrets.AZURE_REGISTRY_PASSWORD }}
 
 
