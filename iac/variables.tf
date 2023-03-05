@@ -16,7 +16,7 @@ variable "acr_name" {
 
 variable "asp_name" {
   description = "The app service plan for the java react app deployment webApp"
-  default = "jsbrappserviceplan"
+  default = "jsbrappServiceplan"
 }
 
 variable "insight_name" {
@@ -24,7 +24,7 @@ variable "insight_name" {
   default = "jsbr-insight"
 }
 
-variable "web_app_name" {
+variable "lwapp_name" {
   description = "The Azure linux webApp wher the java react app deployment docker image is deployed"
   default = "jsbrwebapp"
 }
