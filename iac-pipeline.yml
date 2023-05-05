@@ -5,7 +5,8 @@ resources:
 
 pool:
   vmImage: 'ubuntu-latest'
-  
+Java-test-app
+
 stages:
 - stage: TerraformDeployment
   displayName: 'Deploy resources using Terraform'
@@ -13,34 +14,34 @@ stages:
   - job: Terraform_IaC
     displayName: 'Deploy Infrastructures as Code'
     steps:
-    - task: TerraformCLI@0
-      displayName: Terraform Init
-      inputs:
-        command: 'init'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/iac'
-        backendType: 'azurerm'
-        backendServiceArm: 'Java-test-app'
-        backendAzureRmSubscriptionId: '$(azureSubID)'
-        backendAzureRmResourceGroupName: 'testDeploy'
-        backendAzureRmStorageAccountName: 'javastate'
-        backendAzureRmContainerName: 'javaterterraformstatefile'
-        backendAzureRmKey: 'jsbrterraform.tfstate'
-        allowTelemetryCollection: true
+      - task: TerraformCLI@0
+        displayName: Terraform Init
+        inputs:
+          command: 'init'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/iac'
+          backendType: 'azurerm'
+          backendServiceArm: 'Java-test-app'
+          backendAzureRmSubscriptionId: '$(azureSubID)'
+          backendAzureRmResourceGroupName: 'testDeploy'
+          backendAzureRmStorageAccountName: 'javastate'
+          backendAzureRmContainerName: 'javaterterraformstatefile'
+          backendAzureRmKey: 'jsbrterraform.tfstate'
+          allowTelemetryCollection: true
           
-    - task: TerraformCLI@0
-      displayName: Terraform Plan
-      inputs:
-        command: 'plan'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/iac'
-        environmentServiceName: 'Java-test-app'
-        providerAzureRmSubscriptionId: '$(azureSubID)'
-        allowTelemetryCollection: true
+      - task: TerraformCLI@0
+        displayName: Terraform Plan
+        inputs:
+          command: 'plan'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/iac'
+          environmentServiceName: 'Java-test-app'
+          providerAzureRmSubscriptionId: '$(azureSubID)'
+          allowTelemetryCollection: true
 
-    - task: TerraformCLI@0
-      displayName: Terraform Apply
-      inputs:
-        command: 'apply'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/iac'
-        environmentServiceName: 'Java-test-app'
-        providerAzureRmSubscriptionId: '$(azureSubID)'
-        allowTelemetryCollection: true
+      - task: TerraformCLI@0
+        displayName: Terraform Apply
+        inputs:
+          command: 'apply'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/iac'
+          environmentServiceName: 'Java-test-app'
+          providerAzureRmSubscriptionId: '$(azureSubID)'
+          allowTelemetryCollection: true
