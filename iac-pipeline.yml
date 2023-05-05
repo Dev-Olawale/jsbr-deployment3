@@ -22,6 +22,15 @@
                 backendServiceArm: 'Java-test-app'
                 backendAzureRmSubscriptionId: '$(azureSubID)'
                 backendAzureRmResourceGroupName: 'testDeploy'
+            - task: TerraformTaskV4@4
+              inputs:
+                provider: 'azurerm'
+                command: 'init'
+                backendServiceArm: 'Java-test-app'
+                backendAzureRmResourceGroupName: 'testDeploy'
+                backendAzureRmStorageAccountName: 'javastate'
+                backendAzureRmContainerName: 'javaterterraformstatefile'
+                backendAzureRmKey: 'ZGf8YvukjnNXbHev/gJbMh2rPmJ7OIk+X8Ie2RROIbRfSItfwXsk2cCURzvGRONr2S5GI0RT8EVl+AStlkbfbA=='
                 backendAzureRmStorageAccountName: 'javastate'
                 backendAzureRmContainerName: 'javaterterraformstatefile'
                 backendAzureRmKey: 'jsbrterraform.tfstate'
