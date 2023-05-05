@@ -5,7 +5,7 @@ resources:
 
 pool:
   vmImage: 'ubuntu-latest'
-
+Java-test-app
 
 stages:
 - stage: TerraformDeployment
@@ -20,11 +20,11 @@ stages:
           command: 'init'
           workingDirectory: '$(System.DefaultWorkingDirectory)/iac'
           backendType: 'azurerm'
-          backendServiceArm: 'jsbrServiceConnection'
+          backendServiceArm: 'Java-test-app'
           backendAzureRmSubscriptionId: '$(azureSubID)'
-          backendAzureRmResourceGroupName: 'terraform-RG'
-          backendAzureRmStorageAccountName: 'jsbrtorageaccounts'
-          backendAzureRmContainerName: 'jsbrcontainer'
+          backendAzureRmResourceGroupName: 'testDeploy'
+          backendAzureRmStorageAccountName: 'javastate'
+          backendAzureRmContainerName: 'javaterterraformstatefile'
           backendAzureRmKey: 'jsbrterraform.tfstate'
           allowTelemetryCollection: true
           
@@ -33,7 +33,7 @@ stages:
         inputs:
           command: 'plan'
           workingDirectory: '$(System.DefaultWorkingDirectory)/iac'
-          environmentServiceName: 'jsbrServiceConnection'
+          environmentServiceName: 'Java-test-app'
           providerAzureRmSubscriptionId: '$(azureSubID)'
           allowTelemetryCollection: true
 
@@ -42,6 +42,6 @@ stages:
         inputs:
           command: 'apply'
           workingDirectory: '$(System.DefaultWorkingDirectory)/iac'
-          environmentServiceName: 'jsbrServiceConnection'
+          environmentServiceName: 'Java-test-app'
           providerAzureRmSubscriptionId: '$(azureSubID)'
           allowTelemetryCollection: true
