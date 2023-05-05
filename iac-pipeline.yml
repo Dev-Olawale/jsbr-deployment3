@@ -14,7 +14,7 @@
     - job: Terraform_IaC
       displayName: 'Deploy Infrastructures as Code'
       steps:
-        - task: charleszipp.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-cli.TerraformCLI@0
+        - task: TerraformCLI@0
           displayName: Terraform Init
           inputs:
             command: 'init'
@@ -28,7 +28,7 @@
             backendAzureRmKey: 'jsbrterraform.tfstate'
             allowTelemetryCollection: true
             
-        - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV4@4
+        - task: TerraformCLI@0
           displayName: Terraform Plan
           inputs:
             command: 'plan'
@@ -37,7 +37,7 @@
             providerAzureRmSubscriptionId: '$(azureSubID)'
             allowTelemetryCollection: true
 
-        - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV4@4
+        - task: TerraformCLI@0
           displayName: Terraform Apply
           inputs:
             command: 'apply'
